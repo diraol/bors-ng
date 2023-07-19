@@ -144,15 +144,21 @@ defmodule BorsNG.WebhookController do
       project: project,
       patch: patch,
       author: patch.author,
-      pr: pr
+      pr: pr,
+      is_draft: pr["draft"]
     })
   end
 
   def do_webhook(conn, "github", "issue_comment") do
     is_created = conn.body_params["action"] == "created"
     is_pr = Map.has_key?(conn.body_params["issue"], "pull_request")
+    is_draft = true
 
-    if is_created and is_pr do
+    if is_pr do
+      ^is_draft = conn.body_params["issue"]["draft"]
+    end
+
+    if is_created and is_pr and !is_draft do
       project =
         Repo.get_by!(Project,
           repo_xref: conn.body_params["repository"]["id"]
@@ -321,6 +327,10 @@ defmodule BorsNG.WebhookController do
     SyncerInstallation.start_synchronize_installation(%Installation{
       installation_xref: installation_xref
     })
+  end
+
+  def do_webhook_pr(conn, %{is_draft: true}) do
+    Logger.debug(["Ignoring draft PR: ", conn.body_params["pull_request"]["number"]])
   end
 
   def do_webhook_pr(conn, %{
