@@ -152,32 +152,29 @@ defmodule BorsNG.WebhookController do
   def do_webhook(conn, "github", "issue_comment") do
     is_created = conn.body_params["action"] == "created"
     is_pr = Map.has_key?(conn.body_params["issue"], "pull_request")
-    is_draft = true
-
-    if is_pr do
-      ^is_draft = conn.body_params["issue"]["draft"]
-    end
 
     if is_created and is_pr and !is_draft do
-      project =
-        Repo.get_by!(Project,
-          repo_xref: conn.body_params["repository"]["id"]
-        )
+      if !conn.body_params["issue"]["draft"] do
+        project =
+          Repo.get_by!(Project,
+            repo_xref: conn.body_params["repository"]["id"]
+          )
 
-      commenter =
-        conn.body_params["comment"]["user"]
-        |> GitHub.User.from_json!()
-        |> Syncer.sync_user()
+        commenter =
+          conn.body_params["comment"]["user"]
+          |> GitHub.User.from_json!()
+          |> Syncer.sync_user()
 
-      comment = conn.body_params["comment"]["body"]
+        comment = conn.body_params["comment"]["body"]
 
-      %Command{
-        project: project,
-        commenter: commenter,
-        comment: comment,
-        pr_xref: conn.body_params["issue"]["number"]
-      }
-      |> Command.run()
+        %Command{
+          project: project,
+          commenter: commenter,
+          comment: comment,
+          pr_xref: conn.body_params["issue"]["number"]
+        }
+        |> Command.run()
+      end
     end
   end
 
