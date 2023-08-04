@@ -203,9 +203,9 @@ defmodule BorsNG.ProjectController do
     |> Enum.take(10)
   end
 
-  def log(_, :ro, _, _), do: raise(BorsNG.PermissionDeniedError)
+  # def log(_, :ro, _, _), do: raise(BorsNG.PermissionDeniedError)
 
-  def log(conn, :rw, project, _params) do
+  def log(conn, _, project, _params) do
     render(conn, "log.html",
       project: project,
       current_user_id: conn.assigns.user.id,
