@@ -1,11 +1,11 @@
 <nav>
 
-<div class=wrapper>
-  <a href="<%= Confex.fetch_env!(:bors, :html_github_root) %>/<%= @project.name %>/">
+<div class="wrapper">
+  <a href="{Confex.fetch_env!(:bors, :html_github_root)}/{@project.name}/">
     <%= @project.name %>
   </a>
   ›
-  <a href="<%= project_path(@conn, :settings, @project) %>">
+  <a href="{project_path(@conn, :settings, @project)}">
     Settings
   </a>
   <h1>
@@ -15,9 +15,9 @@
 
 </nav>
 
-<main role=main><div class=wrapper>
+<main role="main"><div class="wrapper">
 
-<h2 class=header><%= @login %></h2>
+<h2 class="header"><%= @login %></h2>
 
 <%= form_for @conn, project_path(@conn, :add_reviewer, @project.id), [as: :reviewer, class: "toolbar"], fn f -> %>
 <%= hidden_input f, :login, value: @login %>

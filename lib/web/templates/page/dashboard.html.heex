@@ -1,22 +1,22 @@
-<main role=main><div class=wrapper>
+<main role="main"><div class="wrapper">
 
-<h2 class=header>Awaiting review</h2>
+<h2 class="header">Awaiting review</h2>
 
 <table class="table">
   <thead>
-    <tr role=row><th>#</th><th>Title</th><th>Repository</th></tr>
+    <tr role="row"><th>#</th><th>Title</th><th>Repository</th></tr>
   </thead>
   <tbody>
 <%= if empty? @patches do %>
   Nothing to see here
 <% else %>
 <%= for patch <- @patches do %>
-    <tr role=row>
+    <tr role="row">
       <td>
         <%= patch.pr_xref %>
       </td>
       <td class="fill-link">
-        <a href="<%= Confex.fetch_env!(:bors, :html_github_root) %>/<%= patch.project.name %>/pull/<%= patch.pr_xref %>">
+        <a href="{Confex.fetch_env!(:bors, :html_github_root)}/{patch.project.name}/pull/{patch.pr_xref}">
           <%= patch.title %>
         </a>
       </td>

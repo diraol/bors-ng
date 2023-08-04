@@ -1,0 +1,127 @@
+<nav>
+<div class="wrapper">
+  <h1>
+    <a href="{Confex.fetch_env!(:bors, :html_github_root)}/{@project.name}/">
+      <%= @project.name %>
+    </a>
+  </h1>
+</div>
+<div class="tabs" role="navigation">
+  <span class="tab tab--active" aria-selected="true">Pull requests</span>
+  <%= if @mode == :rw do %>
+  <%= link "History", to: project_path(@conn, :log, @project), class: "tab" %>
+  <%= link "Settings", to: project_path(@conn, :settings, @project), class: "tab" %>
+  <% end %>
+</div>
+</nav>
+
+<main role="main"><div class="wrapper">
+
+<%= if empty?(@unbatched_patches) and empty?(@batches) do %>
+  Nothing to see here
+<% else %>
+<table class="table">
+<%= for batch <- @batches do %>
+  <thead>
+    <tr role="heading"><td aria-role="presentation" colspan="5">
+      <a href="../batches/{batch.id}">Batch <%= batch.id %></a>
+      <h2 class="header">
+        <%= stringify_state batch.state %>
+        <span class="header-count"><%= Enum.count(batch.patches) %></span>
+      </h2>
+    </td></tr>
+    <tr role="row"><th>#</th><th aria-label="Mergeable" title="Mergeable">M<span class="hide-on-narrow">ergeable</span></th><th>Title</th><th class="priority-column">Priority</th><th class="hide-on-super-narrow">Commit</th></tr>
+  </thead>
+  <tbody>
+  <%= for patch <- batch.patches do %>
+    <tr role="row" id="prrow-{patch.pr_xref}">
+      <td class="expand-row">
+        <%= patch.pr_xref %>
+      </td>
+      <td class="span--{if patch.is_mergeable do}ok{else}error{end}" aria-label="{if patch.is_mergeable do}{if patch.is_draft do}Draft{else}Yes{end}{else}No{end}" title="{if patch.is_mergeable do}{if patch.is_draft do}Draft{else}Yes{end}{else}No{end}">
+        <%= if patch.is_mergeable do %>
+            <%= if patch.is_draft do %>
+            ✎<span class="hide-on-narrow"> Draft</span>
+            <% else %>
+            ✓<span class="hide-on-narrow"> Yes</span>
+            <% end %>
+        <% else %>
+            ⚠<span class="hide-on-narrow"> No</span>
+        <% end %>
+      </td>
+      <td class="fill-link">
+        <a href="{Confex.fetch_env!(:bors, :html_github_root)}/{@project.name}/pull/{patch.pr_xref}">
+          <%= patch.title %>
+        </a>
+      </td>
+      <td class="priority-cell">
+        <%= patch.priority %>
+        <%= if patch.is_single do %>S<% end %>
+      </td>
+      <td class="hide-on-super-narrow">
+        <code><%= truncate_commit(patch.commit) %></code>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+<% end %>
+<%= if @unbatched_patches != [] do %>
+  <thead>
+    <tr role="heading"><td aria-role="presentation" colspan="5">
+      <h2 class="header">
+        Awaiting review
+        <span class="header-count"><%= Enum.count(@unbatched_patches) %></span>
+      </h2>
+    </td></tr>
+    <tr role="row"><th>#</th><th aria-label="Mergeable" title="Mergeable">M<span class="hide-on-narrow">ergeable</span></th><th>Title</th><th class="priority-column">Priority</th><th class="hide-on-super-narrow">Commit</th></tr>
+  </thead>
+  <tbody>
+  <%= for patch <- @unbatched_patches do %>
+    <tr role="row" id="prrow-{patch.pr_xref}">
+      <td class="expand-row">
+        <%= patch.pr_xref %>
+      </td>
+      <td class="span--{if patch.is_mergeable do}ok{else}error{end}" aria-label="{if patch.is_mergeable do}{if patch.is_draft do}Draft{else}Yes{end}{else}No{end}" title="{if patch.is_mergeable do}{if patch.is_draft do}Draft{else}Yes{end}{else}No{end}">
+        <%= if patch.is_mergeable do %>
+            <%= if patch.is_draft do %>
+            ✎<span class="hide-on-narrow"> Draft</span>
+            <% else %>
+            ✓<span class="hide-on-narrow"> Yes</span>
+            <% end %>
+        <% else %>
+            ⚠<span class="hide-on-narrow"> No</span>
+        <% end %>
+      </td>
+      <td class="fill-link">
+        <a href="{Confex.fetch_env!(:bors, :html_github_root)}/{@project.name}>/pull/{patch.pr_xref}">
+          <%= patch.title %>
+        </a>
+      </td>
+      <td class="priority-cell">
+        <%= patch.priority %>
+        <%= if patch.is_single do %>S<% end %>
+      </td>
+      <td class="hide-on-super-narrow">
+        <code><%= truncate_commit(patch.commit) %></code>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+<% end %>
+</table>
+<% end %>
+
+</div></main>
+
+<%= if @mode == :rw do %>
+<footer><div class="wrapper wrapper--mini" role="toolbar"><div class="toolbar">
+<%= if @is_synchronizing do %>
+  <span class="toolbar-item toolbar-item--disabled">Synchronizing...</span>
+<% else %>
+  <%= link "Sync pull requests", to: project_path(@conn, :synchronize, @project), method: :put, class: "toolbar-item" %>
+<% end %>
+<%= if @batches != [] do %>
+  <%= link "Cancel all", to: project_path(@conn, :cancel_all, @project), method: :delete, class: "toolbar-item toolbar-item--remove", data: [confirm: "Commenting `bors r-` on a PR will cancel just the one. You asked to cancel all of them, which is a PITA to undo.\n\nAre you sure you want to cancel all running and waiting pull requests?"] %>
+<% end %>
+</div></div></footer>
+<% end %>

@@ -12,16 +12,16 @@
     <link rel="manifest" href="/images/manifest.json">
     <link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
     <meta name="theme-color" content="#eeeeee">
-    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <link rel="stylesheet" href="{static_path(@conn, '/css/app.css')}">
 <%= if not is_nil(@conn.assigns[:user]) do %>
-    <meta name="bors-current-user" content="<%= @conn.assigns.user.id %>">
+    <meta name="bors-current-user" content="{@conn.assigns.user.id}">
 <% end %>
   </head>
 
   <body>
-    <div id=alert-container>
+    <div id="alert-container">
       <%= if assigns[:project] do %>
-      <div hidden="hidden" id="js--on-project-ping" data-bors-project-id="<%= @project.id %>" role="alert" class="alert js--closable">
+      <div hidden="hidden" id="js--on-project-ping" data-bors-project-id="{@project.id}" role="alert" class="alert js--closable">
       This page is out of date. <a href="">Reload</a>
       </div>
       <% end %>
@@ -38,49 +38,49 @@
     </div>
     <header role="banner">
       <div class="wrapper wrapper--mini">
-        <a id=header-logo href="<%= page_path(@conn, :index) %>"><img alt="bors" src='<%= static_path(@conn, "/images/a.svg") %>' width="90" height="25"></a>
-        <span id=header-sections class=hide-on-narrow>
+        <a id="header-logo" href="{page_path(@conn, :index)}"><img alt="bors" src='{static_path(@conn, "/images/a.svg")}' width="90" height="25"></a>
+        <span id="header-sections" class="hide-on-narrow">
           <%= {:safe, get_header_html()} %>
         </span>
-        <span id=header-user>
+        <span id="header-user">
 <%= if is_nil @conn.assigns[:user] do %>
-          <a class=header-link href='<%= auth_path(@conn, :index, "github") %>'>Log in with GitHub</a>
+          <a class="header-link" href='{auth_path(@conn, :index, "github")}'>Log in with GitHub</a>
 <% else %>
   <%= if @conn.path_info == ["repositories"] do %>
           <b class="header-link hide-on-narrow">Repositories</b>
   <% else %>
-          <a class="header-link hide-on-narrow" href="<%= project_path(@conn, :index) %>">Repositories</a>
+          <a class="header-link hide-on-narrow" href="{project_path(@conn, :index)}">Repositories</a>
   <% end %>
           <a href="#user-dropdown" class="header-link-container drop-down-menu--toggler">
-            <img width=25 height=25 class="no-outline-on-focus" src="<%= @conn.assigns.avatar_url %>" alt="" role="presentation">
-            <span class=header-link><%= @conn.assigns.user.login %> ▾</span>
+            <img width="25" height="25" class="no-outline-on-focus" src="{@conn.assigns.avatar_url}" alt="" role="presentation">
+            <span class="header-link"><%= @conn.assigns.user.login %> ▾</span>
           </a>
 <% end %>
 <%= if not is_nil @conn.assigns[:user] do %>
-          <div class=drop-down-menu--right><div id="user-dropdown" class="drop-down-menu">
+          <div class="drop-down-menu--right"><div id="user-dropdown" class="drop-down-menu">
   <%= if @conn.assigns.user.is_admin do %>
-            <a href="<%= admin_path(@conn, :index) %>">Admin</a>
+            <a href="{admin_path(@conn, :index)}">Admin</a>
   <% end %>
-            <a class=show-on-narrow href="<%= project_path(@conn, :index) %>">Repositories</a>
-            <a href="<%= auth_path(@conn, :logout) %>">Log out</a>
-<% end %>
+            <a class="show-on-narrow" href="{project_path(@conn, :index)}">Repositories</a>
+            <a href="{auth_path(@conn, :logout)}">Log out</a>
           </div></div>
+<% end %>
         </span>
       </div>
     </header>
 
     <%= @inner_content %>
 
-    <footer role=navigation class=show-on-narrow>
-      <div class=wrapper>
+    <footer role="navigation" class="show-on-narrow">
+      <div class="wrapper">
           <%= {:safe, get_header_html()} %>
       </div>
     </footer>
-    <footer role=note>
-      <p class=wrapper>
-        <span id=footer-version>
+    <footer role="note">
+      <p class="wrapper">
+        <span id="footer-version">
           Build:
-          <a href="https://github.com/bors-ng/bors-ng/tree/<%= elem(get_version(), 1) %>">
+          <a href="https://github.com/bors-ng/bors-ng/tree/{elem(get_version(), 1)}">
             <%= elem(get_version(), 0) %>
           </a>
         </span>
@@ -88,6 +88,6 @@
       </p>
     </footer>
 
-    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+    <script src="{static_path(@conn, '/js/app.js')}"></script>
   </body>
 </html>

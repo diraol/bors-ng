@@ -1,14 +1,14 @@
-<nav><div class=wrapper>
-  <a href="<%= admin_path(@conn, :index) %>">
+<nav><div class="wrapper">
+  <a href="{admin_path(@conn, :index)}">
     Administration
   </a>
   ›
   <h1>Duplicate patches in batches</h1>
 </div></nav>
 
-<main role=main><div class=wrapper>
+<main role="main"><div class="wrapper">
 
-<table class=table>
+<table class="table">
   <tbody>
   <%= for {patch, project} <- @patch_proj do %>
     <tr role="row">
@@ -16,7 +16,7 @@
         <%= patch.pr_xref %>
       </td>
       <td class="fill-link">
-        <a href="https://github.com/<%= project.name %>/pull/<%= patch.pr_xref %>">
+        <a href="https://github.com/{project.name}/pull/{patch.pr_xref}">
           <%= patch.title %>
         </a>
       </td>

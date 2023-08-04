@@ -1,0 +1,25 @@
+<main role="main"><div class="wrapper">
+
+<div class="toolbar">
+  <a class="toolbar-item" href="{BorsNG.Attrs.get_github_integration_url()}">
+    Add / Remove Repositories
+  </a>
+</div>
+<%= if empty? @projects do %>
+  Nothing to see here!
+<% else %>
+
+  <table class="table">
+    <tbody>
+      <%= for project <- @projects do %>
+          <tr role="row">
+            <td class="fill-link">
+              <%= link project.name, to: project_path(@conn, :show, project) %>
+            </td>
+          </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+</div></main>

@@ -1,11 +1,11 @@
 <nav>
 
-<div class=wrapper>
-  <a href="<%= Confex.fetch_env!(:bors, :html_github_root) %>/<%= @project.name %>/">
+<div class="wrapper">
+  <a href="{Confex.fetch_env!(:bors, :html_github_root)}/{@project.name}/">
     <%= @project.name %>
   </a>
   ›
-  <a href="<%= project_path(@conn, :log, @project) %>">
+  <a href="{project_path(@conn, :log, @project)}">
     History
   </a>
   <h1>
@@ -15,7 +15,7 @@
 
 </nav>
 
-<main role=main><div class=wrapper>
+<main role="main"><div class="wrapper">
 
 <%= if @batch do %>
 <p>Date: <%= htmlify_naive_datetime(@batch.updated_at) %></p>
@@ -26,7 +26,7 @@
   <%= for status <- @statuses do %>
   <li>
     <%= if status.url do %>
-    <a href="<%= status.url %>"><%= status.identifier %> (<%= stringify_state(status.state) %>)</a>
+    <a href="{status.url}"><%= status.identifier %> (<%= stringify_state(status.state) %>)</a>
     <% else %>
     <span><%= status.identifier %> (<%= stringify_state(status.state) %>)</span>
     <% end %>
@@ -38,7 +38,7 @@
   <ul>
     <%= for patch <- @patches do %>
     <li>
-      <a href="<%= Confex.fetch_env!(:bors, :html_github_root) %>/<%= @project.name %>/pull/<%= patch.pr_xref %>">#<%= patch.pr_xref %></a>
+      <a href="{Confex.fetch_env!(:bors, :html_github_root)}/{@project.name}/pull/{patch.pr_xref}">#<%= patch.pr_xref %></a>
     </li>
     <% end %>
   </ul>

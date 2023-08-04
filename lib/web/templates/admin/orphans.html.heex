@@ -1,17 +1,17 @@
-<nav><div class=wrapper>
-  <a href="<%= admin_path(@conn, :index) %>">
+<nav><div class="wrapper">
+  <a href="{admin_path(@conn, :index)}">
     Administration
   </a>
   ›
   <h1>Orphaned repositories</h1>
 </div></nav>
 
-<main role=main><div class=wrapper>
+<main role="main"><div class="wrapper">
 
-<table class=table>
+<table class="table">
   <tbody>
 <%= for orphan <- @orphans do %>
-    <tr role=row>
+    <tr role="row">
       <td class="fill-link">
         <%= link orphan.name, to: project_path(@conn, :settings, orphan) %>
       </td>
